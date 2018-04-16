@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
 
 public class MainActivity extends Activity {
     MapView map = null;
+    MinimapOverlay mMinimapOverlay;
+
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -32,10 +37,26 @@ public class MainActivity extends Activity {
 
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.OpenTopo);
+
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+
         IMapController mapController = map.getController();
-        mapController.setZoom(9);
-        GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);
+        mapController.setZoom(13);
+        GeoPoint startPoint = new GeoPoint(49.1875, 20.0625);
         mapController.setCenter(startPoint);
+
+        //LatLonGridlineOverlay2 overlay = new LatLonGridlineOverlay2();
+        //map.getOverlays().add(overlay);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        mMinimapOverlay = new MinimapOverlay(ctx, map.getTileRequestCompleteHandler());
+        mMinimapOverlay.setWidth(dm.widthPixels / 5);
+        mMinimapOverlay.setHeight(dm.heightPixels / 5);
+        mMinimapOverlay.setZoomDifference(4);
+        //optionally, you can set the minimap to a different tile source
+        //mMinimapOverlay.setTileSource(....);
+        map.getOverlays().add(this.mMinimapOverlay);
     }
 
     public void onResume(){
