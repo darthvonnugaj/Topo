@@ -66,7 +66,7 @@ public class MapFragment extends Fragment  {
 
         map.setTileSource(TileSourceFactory.OpenTopo);
 
-        map.setBuiltInZoomControls(true);
+        map.setBuiltInZoomControls(false);
         map.setMultiTouchControls(true);
 
         IMapController mapController = map.getController();
