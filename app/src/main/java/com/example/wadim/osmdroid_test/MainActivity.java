@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.example.wadim.osmdroid_test.fragment.FavouritesFragment;
 import com.example.wadim.osmdroid_test.fragment.MapFragment;
 import com.example.wadim.osmdroid_test.fragment.RouteListFragment;
+import com.example.wadim.osmdroid_test.fragment.SettingsFragment;
 import com.example.wadim.osmdroid_test.helper.BottomNavigationBehavior;
 
 import org.osmdroid.views.MapView;
@@ -79,24 +80,6 @@ public class MainActivity extends AppCompatActivity {
         map.getOverlays().add(this.mMinimapOverlay);*/
     }
 
-    /*public void onResume(){
-        super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    public void onPause(){
-        super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }*/
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -117,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_folder:
                     toolbar.setTitle("Favourites");
                     fragment = new FavouritesFragment();
+                    loadFragment(fragment);
+                    return true;
+                case R.id.navigation_settings:
+                    toolbar.setTitle("Settings");
+                    fragment = new SettingsFragment();
                     loadFragment(fragment);
                     return true;
             }
