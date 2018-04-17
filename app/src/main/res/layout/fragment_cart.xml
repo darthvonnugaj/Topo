@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.androidhive.bottomnavigation.fragment.CartFragment">
+    tools:context="com.example.wadim.osmdroid_test.fragment.FavouritesFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Saved Routes"
+        android:text="Favourites"
         android:textSize="22dp" />
 
 </FrameLayout>

@@ -40,9 +40,9 @@ import java.util.List;
 
 import com.example.wadim.osmdroid_test.R;
 
-public class StoreFragment extends Fragment {
+public class RouteListFragment extends Fragment {
 
-    private static final String TAG = StoreFragment.class.getSimpleName();
+    private static final String TAG = RouteListFragment.class.getSimpleName();
 
     // url to fetch shopping items
     private static final String URL = "https://api.androidhive.info/json/movies_2017.json";
@@ -51,12 +51,12 @@ public class StoreFragment extends Fragment {
     private List<Movie> itemsList;
     private StoreAdapter mAdapter;
 
-    public StoreFragment() {
+    public RouteListFragment() {
         // Required empty public constructor
     }
 
-    public static StoreFragment newInstance(String param1, String param2) {
-        StoreFragment fragment = new StoreFragment();
+    public static RouteListFragment newInstance(String param1, String param2) {
+        RouteListFragment fragment = new RouteListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -71,7 +71,7 @@ public class StoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_store, container, false);
+        View view = inflater.inflate(R.layout.fragment_route_list, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         itemsList = new ArrayList<>();

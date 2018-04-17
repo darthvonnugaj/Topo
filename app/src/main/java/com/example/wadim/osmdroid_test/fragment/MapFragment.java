@@ -1,5 +1,6 @@
 package com.example.wadim.osmdroid_test.fragment;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,14 +9,15 @@ import android.view.ViewGroup;
 
 import com.example.wadim.osmdroid_test.R;
 
-public class CartFragment extends Fragment {
 
-    public CartFragment() {
+public class MapFragment extends Fragment {
+
+    public MapFragment() {
         // Required empty public constructor
     }
 
-    public static CartFragment newInstance(String param1, String param2) {
-        CartFragment fragment = new CartFragment();
+    public static MapFragment newInstance(String param1, String param2) {
+        MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -30,6 +32,7 @@ public class CartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false);
+        return inflater.inflate(R.layout.fragment_map, container, false);
     }
+
 }

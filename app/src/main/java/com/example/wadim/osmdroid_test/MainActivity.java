@@ -1,8 +1,5 @@
 package com.example.wadim.osmdroid_test;
 
-import android.app.Activity;
-import android.content.Context;
-import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,21 +8,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
 
-import com.example.wadim.osmdroid_test.fragment.CartFragment;
-import com.example.wadim.osmdroid_test.fragment.GiftsFragment;
-import com.example.wadim.osmdroid_test.fragment.StoreFragment;
+import com.example.wadim.osmdroid_test.fragment.FavouritesFragment;
+import com.example.wadim.osmdroid_test.fragment.MapFragment;
+import com.example.wadim.osmdroid_test.fragment.RouteListFragment;
 import com.example.wadim.osmdroid_test.helper.BottomNavigationBehavior;
 
-import org.osmdroid.api.IMapController;
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MinimapOverlay;
-import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
 
 public class MainActivity extends AppCompatActivity {
     MapView map = null;
@@ -48,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         // load the store fragment by default
         toolbar.setTitle("Map");
-        loadFragment(new GiftsFragment());
+        loadFragment(new MapFragment());
 
         //handle permissions first, before map is created. not depicted here
 
@@ -115,17 +106,17 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_map:
                     toolbar.setTitle("Map");
-                    fragment = new GiftsFragment();
+                    fragment = new MapFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_list:
                     toolbar.setTitle("Route List");
-                    fragment = new StoreFragment();
+                    fragment = new RouteListFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_folder:
-                    toolbar.setTitle("Saved Routes");
-                    fragment = new CartFragment();
+                    toolbar.setTitle("Favourites");
+                    fragment = new FavouritesFragment();
                     loadFragment(fragment);
                     return true;
             }
