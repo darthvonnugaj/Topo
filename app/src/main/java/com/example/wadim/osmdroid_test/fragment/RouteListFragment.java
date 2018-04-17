@@ -256,8 +256,14 @@ public class RouteListFragment extends Fragment {
                     case R.id.action_add_favourite:
                         Toast.makeText(context, "Add to favourite", Toast.LENGTH_SHORT).show();
                         return true;
-                    case R.id.action_play_next:
-                        Toast.makeText(context, "Play next", Toast.LENGTH_SHORT).show();
+                    case R.id.action_details:
+                        DetailsFragment fragment = new DetailsFragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                        actionBar.setTitle("Route Details");
                         return true;
                     default:
                 }
