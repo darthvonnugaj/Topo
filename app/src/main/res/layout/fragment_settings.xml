@@ -1,14 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.wadim.osmdroid_test.fragment.SettingsFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Settings"
         android:textSize="22dp" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/etToSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title_settings"
+        android:layout_below="@id/settings"
+        android:textSize="22dp" />
+
+
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="171dp"
+        android:layout_height="68dp"
+        android:text="@string/btn_settings"
+        android:layout_below="@id/radioSex"
+        android:layout_alignParentLeft="true"
+        />
+
+    <RadioGroup
+        android:id="@+id/radioSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etToSave">
+
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_male"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_female" />
+
+    </RadioGroup>
+
+</RelativeLayout>

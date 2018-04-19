@@ -4,4 +4,7 @@
     <string name="title_list">Route List</string>
     <string name="title_folder">Favourites</string>
     <string name="title_settings">Settings</string>
+    <string name="btn_settings">Save settings</string>
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
 </resources>

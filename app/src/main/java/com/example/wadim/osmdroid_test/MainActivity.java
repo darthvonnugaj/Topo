@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     MinimapOverlay mMinimapOverlay;
     private ActionBar toolbar;
 
+
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
