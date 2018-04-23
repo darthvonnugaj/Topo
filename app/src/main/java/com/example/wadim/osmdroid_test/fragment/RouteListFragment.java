@@ -2,9 +2,11 @@ package com.example.wadim.osmdroid_test.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -50,6 +52,8 @@ public class RouteListFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Movie> itemsList;
     private StoreAdapter mAdapter;
+    private SharedPreferences prefs;
+
 
     public RouteListFragment() {
         // Required empty public constructor
@@ -85,6 +89,8 @@ public class RouteListFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
 
         fetchStoreItems();
+
+        prefs =  this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
         return view;
     }

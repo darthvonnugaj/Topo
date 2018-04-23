@@ -16,19 +16,13 @@ import com.example.wadim.osmdroid_test.fragment.RouteListFragment;
 import com.example.wadim.osmdroid_test.fragment.SettingsFragment;
 import com.example.wadim.osmdroid_test.helper.BottomNavigationBehavior;
 
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MinimapOverlay;
-
 public class MainActivity extends AppCompatActivity {
-    MapView map = null;
-    MinimapOverlay mMinimapOverlay;
     private ActionBar toolbar;
 
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         toolbar = getSupportActionBar();
 
@@ -42,43 +36,6 @@ public class MainActivity extends AppCompatActivity {
         // load the store fragment by default
         toolbar.setTitle("Map");
         loadFragment(new MapFragment());
-
-        //handle permissions first, before map is created. not depicted here
-
-        //load/initialize the osmdroid configuration, this can be done
-        /*Context ctx = getApplicationContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        //setting this before the layout is inflated is a good idea
-        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
-        //see also StorageUtils
-        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
-
-        //inflate and create the map
-        setContentView(R.layout.activity_main);
-
-        map = (MapView) findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.OpenTopo);
-
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
-
-        IMapController mapController = map.getController();
-        mapController.setZoom(13);
-        GeoPoint startPoint = new GeoPoint(49.1875, 20.0625);
-        mapController.setCenter(startPoint);
-
-        //LatLonGridlineOverlay2 overlay = new LatLonGridlineOverlay2();
-        //map.getOverlays().add(overlay);
-
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        mMinimapOverlay = new MinimapOverlay(ctx, map.getTileRequestCompleteHandler());
-        mMinimapOverlay.setWidth(dm.widthPixels / 5);
-        mMinimapOverlay.setHeight(dm.heightPixels / 5);
-        mMinimapOverlay.setZoomDifference(4);
-        //optionally, you can set the minimap to a different tile source
-        //mMinimapOverlay.setTileSource(....);
-        map.getOverlays().add(this.mMinimapOverlay);*/
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

@@ -1,6 +1,8 @@
 package com.example.wadim.osmdroid_test.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -15,6 +17,8 @@ public class MyApplication extends Application {
     private RequestQueue mRequestQueue;
 
     private static MyApplication mInstance;
+
+    public static final String FAV_SETTING = "FavouriteRoutes";
 
     @Override
     public void onCreate() {
@@ -49,5 +53,39 @@ public class MyApplication extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    public void addFavourite(int id){
+        int[] favs = getFavourites();
+        int cnt = favs.length+1;
+        SharedPreferences.Editor edit = getInstance().getApplicationContext().getSharedPreferences("NAME", Context.MODE_PRIVATE).edit();
+        edit.putInt(FAV_SETTING, cnt);
+        int count = 0;
+        for (int i: favs){
+            edit.putInt("IntValue_" + FAV_SETTING + count++, favs[i]);
+        }
+        edit.putInt("IntValue_" + FAV_SETTING + count++, id);
+        edit.commit();
+    }
+
+    public void storeFavourites(int[] array){
+        SharedPreferences.Editor edit = getInstance().getApplicationContext().getSharedPreferences("NAME", Context.MODE_PRIVATE).edit();
+        edit.putInt(FAV_SETTING, array.length);
+        int count = 0;
+        for (int i: array){
+            edit.putInt("IntValue_" + FAV_SETTING + count++, i);
+        }
+        edit.commit();
+    }
+
+    public int[] getFavourites(){
+        int[] ret;
+        SharedPreferences prefs = getInstance().getApplicationContext().getSharedPreferences("NAME", Context.MODE_PRIVATE);
+        int count = prefs.getInt(FAV_SETTING, 0);
+        ret = new int[count];
+        for (int i = 0; i < count; i++){
+            ret[i] = prefs.getInt("IntValue_"+ FAV_SETTING + i, i);
+        }
+        return ret;
     }
 }
