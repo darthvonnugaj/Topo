@@ -31,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.example.wadim.osmdroid_test.Movie;
+import com.example.wadim.osmdroid_test.Route;
 import com.example.wadim.osmdroid_test.app.MyApplication;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -47,10 +48,10 @@ public class RouteListFragment extends Fragment {
     private static final String TAG = RouteListFragment.class.getSimpleName();
 
     // url to fetch shopping items
-    private static final String URL = "https://api.androidhive.info/json/movies_2017.json";
+    private static final String URL = "http://ec2-18-184-119-144.eu-central-1.compute.amazonaws.com/api/routes/14/121";//"https://api.androidhive.info/json/movies_2017.json";
 
     private RecyclerView recyclerView;
-    private List<Movie> itemsList;
+    private List<Route> itemsList;
     private StoreAdapter mAdapter;
     private SharedPreferences prefs;
 
@@ -108,7 +109,7 @@ public class RouteListFragment extends Fragment {
                             return;
                         }
 
-                        List<Movie> items = new Gson().fromJson(response.toString(), new TypeToken<List<Movie>>() {
+                        List<Route> items = new Gson().fromJson(response.toString(), new TypeToken<List<Route>>() {
                         }.getType());
 
                         itemsList.clear();
@@ -180,27 +181,28 @@ public class RouteListFragment extends Fragment {
      */
     class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.MyViewHolder> {
         private Context context;
-        private List<Movie> movieList;
-
+        private List<Route> routeList;
+//TUTAJ
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView name, price;
-            public ImageView thumbnail, overflow;
+            public TextView name, grade;
+            public ImageView thumbnail, overflow, type;
 
             public MyViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.title);
-                price = view.findViewById(R.id.price);
+                grade = view.findViewById(R.id.price);
                 thumbnail = view.findViewById(R.id.thumbnail);
                 overflow = view.findViewById(R.id.overflow);
+                //type = view.findViewById(R.id.type);
             }
         }
 
 
 
 
-        public StoreAdapter(Context context, List<Movie> movieList) {
+        public StoreAdapter(Context context, List<Route> routeList) {
             this.context = context;
-            this.movieList = movieList;
+            this.routeList = routeList;
         }
 
         @Override
@@ -213,12 +215,12 @@ public class RouteListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            final Movie movie = movieList.get(position);
-            holder.name.setText(movie.getTitle());
-            holder.price.setText(movie.getPrice());
+            final Route route = routeList.get(position);
+            holder.name.setText(route.getName());
+            holder.grade.setText(route.getGrade());
 
             Glide.with(context)
-                    .load(movie.getImage())
+                    .load(route.getImage())
                     .into(holder.thumbnail);
 
             holder.thumbnail.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +281,7 @@ public class RouteListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return movieList.size();
+            return routeList.size();
         }
     }
 }

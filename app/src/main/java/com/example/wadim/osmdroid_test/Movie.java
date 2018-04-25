@@ -6,7 +6,7 @@ package com.example.wadim.osmdroid_test;
 
 public class Movie {
     String title;
-    String image;
+    String img;
     String price;
 
     public String getTitle() {
@@ -18,11 +18,11 @@ public class Movie {
     }
 
     public String getImage() {
-        return image;
+        return img;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage(String img) {
+        this.img = img;
     }
 
     public String getPrice() {
