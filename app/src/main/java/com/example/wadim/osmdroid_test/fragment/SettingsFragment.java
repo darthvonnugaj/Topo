@@ -13,9 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wadim.osmdroid_test.R;
+import com.example.wadim.osmdroid_test.app.MyApplication;
 
 
 public class SettingsFragment extends Fragment {
@@ -29,6 +31,8 @@ public class SettingsFragment extends Fragment {
     private RadioGroup radioSexGroup;
     private RadioButton radioSexButton;
     private int selectedId;
+
+    private TextView lat, lon;
 
     private SharedPreferences preferences;
 
@@ -106,6 +110,12 @@ public class SettingsFragment extends Fragment {
         btnSave = (Button) MyFragmentView.findViewById(R.id.btnSave);
         radioSexGroup = (RadioGroup) MyFragmentView.findViewById(R.id.radioSex);
 
+        lat = (TextView) MyFragmentView.findViewById(R.id.lat);
+        lon = (TextView) MyFragmentView.findViewById(R.id.lon);
+        String stringdouble= Double.toString(((MyApplication) getActivity().getApplication()).getLat());
+        lat.setText(stringdouble);
+        stringdouble= Double.toString(((MyApplication) getActivity().getApplication()).getLon());
+        lon.setText(stringdouble);
 
         initButtonOnClick(MyFragmentView);
         restoreData(MyFragmentView);
