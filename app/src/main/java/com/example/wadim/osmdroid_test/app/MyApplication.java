@@ -9,6 +9,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import org.osmdroid.util.GeoPoint;
+
 public class MyApplication extends Application {
 
     public static final String TAG = MyApplication.class
@@ -19,6 +21,9 @@ public class MyApplication extends Application {
     private static MyApplication mInstance;
 
     public static final String FAV_SETTING = "FavouriteRoutes";
+
+    private double lat;
+    private double lon;
 
     @Override
     public void onCreate() {
@@ -87,5 +92,25 @@ public class MyApplication extends Application {
             ret[i] = prefs.getInt("IntValue_"+ FAV_SETTING + i, i);
         }
         return ret;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public GeoPoint getGeoPoint() {
+        return new GeoPoint(this.lat, this.lon);
     }
 }

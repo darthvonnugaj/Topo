@@ -7,4 +7,6 @@
     <string name="btn_settings">Save settings</string>
     <string name="radio_male">Male</string>
     <string name="radio_female">Female</string>
+    <string name="resume">RESUME LOCATION UPDATES</string>
+    <string name="pause">PAUSE LOCATION UPDATES</string>
 </resources>

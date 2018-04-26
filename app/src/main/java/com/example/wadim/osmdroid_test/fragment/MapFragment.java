@@ -3,6 +3,7 @@ package com.example.wadim.osmdroid_test.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.wadim.osmdroid_test.app.MyApplication;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -71,8 +74,12 @@ public class MapFragment extends Fragment  {
 
         IMapController mapController = map.getController();
         mapController.setZoom(13);
-        GeoPoint startPoint = new GeoPoint(49.1875, 20.0625);
-        mapController.setCenter(startPoint);
+        //GeoPoint startPoint = new GeoPoint(49.1875, 20.0625);
+        //mapController.setCenter(startPoint);
+
+        //mapController.setCenter(initMyLocationNewOverlay());
+        initMyLocationNewOverlay();
+        mapController.setCenter(((MyApplication) getActivity().getApplication()).getGeoPoint());
 
         //@TODO Grid -> to settings
         //LatLonGridlineOverlay2 overlay = new LatLonGridlineOverlay2();
@@ -86,5 +93,29 @@ public class MapFragment extends Fragment  {
         //optionally, you can set the minimap to a different tile source
         //mMinimapOverlay.setTileSource(....);
         map.getOverlays().add(this.mMinimapOverlay);
+    }
+
+    private void initMyLocationNewOverlay() {
+        GpsMyLocationProvider provider = new GpsMyLocationProvider(getActivity());
+        provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+        mLocationOverlay = new MyLocationNewOverlay(provider, map);
+        mLocationOverlay.setDrawAccuracyEnabled(true);
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.runOnFirstFix(new Runnable()
+        { public void run()
+            {
+                ((MyApplication) getActivity().getApplication()).setLat( mLocationOverlay.getMyLocation().getLatitude());
+                ((MyApplication) getActivity().getApplication()).setLon( mLocationOverlay.getMyLocation().getLongitude());
+            }
+        });
+        map.getOverlays().add(mLocationOverlay);
+        map.invalidate();// }
+
+        //map.getOverlayManager().add(mLocationOverlay);
+        //double latitude = (mLocationOverlay.getMyLocation().getLatitudeE6())/ 1e6;
+
+        //double longitude = (mLocationOverlay.getMyLocation().getLongitudeE6())/ 1e6;
+        //GeoPoint startPoint = new GeoPoint(latitude, longitude);
+        //return startPoint;
     }
 }
