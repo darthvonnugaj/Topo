@@ -74,11 +74,11 @@ public class SettingsFragment extends Fragment {
         preferencesEditor.apply();
     }
 
-    private void restoreData( View fragmentView) {
+    private void restoreData(final View fragmentView) {
         String textFromPreferences = preferences.getString(PREFERENCES_TEXT_FIELD, "");
         etToSave.setText(textFromPreferences);
         int intGender = preferences.getInt(GENDER_FIELD, 0);
-       if (intGender ==0)
+       if (intGender == 0)
         {
             radioSexButton = (RadioButton) fragmentView.findViewById(R.id.radioMale);
             radioSexButton.setChecked(true);
