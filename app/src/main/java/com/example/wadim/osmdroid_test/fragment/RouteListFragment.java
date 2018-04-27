@@ -182,7 +182,9 @@ public class RouteListFragment extends Fragment {
     class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.MyViewHolder> {
         private Context context;
         private List<Route> routeList;
-//TUTAJ
+
+
+
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView name, grade;
             public ImageView thumbnail, overflow, type;
@@ -203,6 +205,7 @@ public class RouteListFragment extends Fragment {
         public StoreAdapter(Context context, List<Route> routeList) {
             this.context = context;
             this.routeList = routeList;
+
         }
 
         @Override
@@ -240,23 +243,30 @@ public class RouteListFragment extends Fragment {
             holder.overflow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(holder.overflow);
+                    showPopupMenu(holder.overflow, route.getId());
                 }
             });
         }
 
-        private void showPopupMenu(View view) {
+        private void showPopupMenu(View view, int id) {
             // inflate menu
+
             PopupMenu popup = new PopupMenu(context, view);
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.men_item, popup.getMenu());
-            popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+            popup.setOnMenuItemClickListener(new MyMenuItemClickListener(id));
             popup.show();
         }
 
         class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
+            private int selectedId;
+
             public MyMenuItemClickListener() {
+            }
+
+            public MyMenuItemClickListener(int id) {
+                this.selectedId = id;
             }
 
             @Override
@@ -266,7 +276,8 @@ public class RouteListFragment extends Fragment {
                         Toast.makeText(context, "Add to favourite", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.action_details:
-                        DetailsFragment fragment = new DetailsFragment();
+                        //DetailsFragment fragment = new DetailsFragment();
+                        Fragment fragment = DetailsFragment.newInstance(selectedId);
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.frame_container, fragment);
                         transaction.addToBackStack(null);
