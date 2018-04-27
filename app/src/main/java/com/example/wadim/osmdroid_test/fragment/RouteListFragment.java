@@ -226,7 +226,8 @@ public class RouteListFragment extends Fragment {
             holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DetailsFragment fragment = new DetailsFragment();
+                    //DetailsFragment fragment = new DetailsFragment();
+                    Fragment fragment = DetailsFragment.newInstance(route.getId());
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame_container, fragment);
                     transaction.addToBackStack(null);

@@ -1,14 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.wadim.osmdroid_test.fragment.DetailsFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Route Details"
-        android:textSize="22dp" />
+        android:id="@+id/routeId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Route id: "
+        android:textSize="22dp"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/idTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/routeId"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="0"
+        android:textSize="22dp"/>
+
+</RelativeLayout>
