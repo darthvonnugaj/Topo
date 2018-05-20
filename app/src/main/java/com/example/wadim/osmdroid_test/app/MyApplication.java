@@ -25,6 +25,7 @@ public class MyApplication extends Application {
     private double lat;
     private double lon;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -60,36 +61,36 @@ public class MyApplication extends Application {
         }
     }
 
-    public void addFavourite(int id){
+    public void addFavourite(int id) {
         int[] favs = getFavourites();
-        int cnt = favs.length+1;
+        int cnt = favs.length + 1;
         SharedPreferences.Editor edit = getInstance().getApplicationContext().getSharedPreferences("NAME", Context.MODE_PRIVATE).edit();
         edit.putInt(FAV_SETTING, cnt);
         int count = 0;
-        for (int i: favs){
+        for (int i : favs) {
             edit.putInt("IntValue_" + FAV_SETTING + count++, favs[i]);
         }
         edit.putInt("IntValue_" + FAV_SETTING + count++, id);
         edit.commit();
     }
 
-    public void storeFavourites(int[] array){
+    public void storeFavourites(int[] array) {
         SharedPreferences.Editor edit = getInstance().getApplicationContext().getSharedPreferences("NAME", Context.MODE_PRIVATE).edit();
         edit.putInt(FAV_SETTING, array.length);
         int count = 0;
-        for (int i: array){
+        for (int i : array) {
             edit.putInt("IntValue_" + FAV_SETTING + count++, i);
         }
         edit.commit();
     }
 
-    public int[] getFavourites(){
+    public int[] getFavourites() {
         int[] ret;
         SharedPreferences prefs = getInstance().getApplicationContext().getSharedPreferences("NAME", Context.MODE_PRIVATE);
         int count = prefs.getInt(FAV_SETTING, 0);
         ret = new int[count];
-        for (int i = 0; i < count; i++){
-            ret[i] = prefs.getInt("IntValue_"+ FAV_SETTING + i, i);
+        for (int i = 0; i < count; i++) {
+            ret[i] = prefs.getInt("IntValue_" + FAV_SETTING + i, i);
         }
         return ret;
     }
@@ -112,5 +113,9 @@ public class MyApplication extends Application {
 
     public GeoPoint getGeoPoint() {
         return new GeoPoint(this.lat, this.lon);
+    }
+
+    public String getUrl() {
+        return "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/" + Integer.toString((int) lat) + "/" + Integer.toString((int) lon);
     }
 }

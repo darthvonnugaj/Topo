@@ -33,7 +33,6 @@ public class SettingsFragment extends Fragment {
     private int selectedId;
 
     private TextView lat, lon;
-
     private SharedPreferences preferences;
 
     public SettingsFragment() {
@@ -112,11 +111,11 @@ public class SettingsFragment extends Fragment {
 
         lat = (TextView) MyFragmentView.findViewById(R.id.lat);
         lon = (TextView) MyFragmentView.findViewById(R.id.lon);
-        String stringdouble= Double.toString(((MyApplication) getActivity().getApplication()).getLat());
-        lat.setText(stringdouble);
-        stringdouble= Double.toString(((MyApplication) getActivity().getApplication()).getLon());
-        lon.setText(stringdouble);
 
+        String stringdouble= Integer.toString((int)(((MyApplication) getActivity().getApplication()).getLat()));
+        lat.setText(stringdouble);
+        stringdouble= Integer.toString((int)(((MyApplication) getActivity().getApplication()).getLon()));
+        lon.setText(stringdouble);
         initButtonOnClick(MyFragmentView);
         restoreData(MyFragmentView);
         return MyFragmentView;

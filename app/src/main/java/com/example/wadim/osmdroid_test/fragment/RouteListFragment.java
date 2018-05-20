@@ -48,8 +48,8 @@ public class RouteListFragment extends Fragment {
     private static final String TAG = RouteListFragment.class.getSimpleName();
 
     // url to fetch shopping items
-    private static final String URL = "http://ec2-18-184-119-144.eu-central-1.compute.amazonaws.com/api/routes/14/121";//"https://api.androidhive.info/json/movies_2017.json";
-
+   // private static final String URL = "http://ec2-18-184-119-144.eu-central-1.compute.amazonaws.com/api/routes/50/19";//"https://api.androidhive.info/json/movies_2017.json";
+    private String URL;
     private RecyclerView recyclerView;
     private List<Route> itemsList;
     private StoreAdapter mAdapter;
@@ -88,7 +88,7 @@ public class RouteListFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         recyclerView.setNestedScrollingEnabled(false);
-
+        URL = ((MyApplication) getActivity().getApplication()).getUrl();
         fetchStoreItems();
 
         prefs =  this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);

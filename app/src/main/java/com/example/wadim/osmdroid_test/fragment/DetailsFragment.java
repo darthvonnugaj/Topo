@@ -3,18 +3,46 @@ package com.example.wadim.osmdroid_test.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
 import com.example.wadim.osmdroid_test.R;
+import com.example.wadim.osmdroid_test.Route;
+import com.example.wadim.osmdroid_test.app.MyApplication;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 
 public class DetailsFragment extends Fragment {
 
     private int id;
     private TextView idTextView;
+    public TextView name, grade, lon, lat;
+    public ImageView thumbnail, type;
+
+    private Route itemsList;
+    private static final String TAG = DetailsFragment.class.getSimpleName();
+
+
+    private static String URL0 = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
+    private static String URL = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
 
 
     public DetailsFragment() {
@@ -32,8 +60,48 @@ public class DetailsFragment extends Fragment {
     private void readBundle(Bundle bundle) {
         if (bundle != null) {
             id = bundle.getInt("id");
+            StringBuilder stringBuilder = new StringBuilder(URL0);
+            stringBuilder.append(id);
+            URL = stringBuilder.toString();
         }
     }
+
+    private void fetchStoreItems() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //mTextView.setText("Response: " + response.toString());
+                        Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
+                        try {
+                            name.setText((String)response.get("name"));
+                            grade.setText((String)response.get("grade"));
+                            String stringDouble= Double.toString((Double)response.get("lat"));
+                            lat.setText(stringDouble);
+                            stringDouble= Double.toString((Double)response.get("lon"));
+                            lon.setText(stringDouble);
+                            Glide.with(getActivity())
+                                    .load((String)response.get("img"))
+                                    .into(thumbnail);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+        MyApplication instance = MyApplication.getInstance();
+        instance.addToRequestQueue(jsonObjectRequest);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,14 +114,36 @@ public class DetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View MyFragmentView = inflater.inflate(R.layout.fragment_details, container, false);
 
-        idTextView = (TextView) MyFragmentView.findViewById(R.id.idTextView);
 
         readBundle(getArguments());
 
-        idTextView.setText(String.format("%d", id));
 
+        name = MyFragmentView.findViewById(R.id.title);
+        grade = MyFragmentView.findViewById(R.id.grade);
+        thumbnail = MyFragmentView.findViewById(R.id.thumbnail);
+        lat = MyFragmentView.findViewById(R.id.lat);
+        lon = MyFragmentView.findViewById(R.id.lon);
+        fetchStoreItems();
+
+
+        //type = MyFragmentView.findViewById(R.id.type);
 
         return  MyFragmentView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        readBundle(getArguments());
+        fetchStoreItems();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        readBundle(getArguments());
+        fetchStoreItems();
+    }
+
 
 }
