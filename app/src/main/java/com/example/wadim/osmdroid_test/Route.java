@@ -1,5 +1,6 @@
 package com.example.wadim.osmdroid_test;
 
+
 public class Route {
     int id;
     String name;
@@ -8,6 +9,9 @@ public class Route {
     String img;
     double lat;
     double lon;
+
+    private static String URL0 = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
+    private static String URL = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
 
     public int getId() {
         return id;
@@ -65,4 +69,7 @@ public class Route {
     public void setLon(double lon) {
         this.lon = lon;
     }
+
+
+
 }

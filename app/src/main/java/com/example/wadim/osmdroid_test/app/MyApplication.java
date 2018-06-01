@@ -26,6 +26,8 @@ public class MyApplication extends Application {
     private double lon;
 
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();

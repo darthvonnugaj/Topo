@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.example.wadim.osmdroid_test.R;
 import com.example.wadim.osmdroid_test.Route;
 import com.example.wadim.osmdroid_test.app.MyApplication;
+import com.example.wadim.osmdroid_test.helper.DatabaseHelper;
+import com.example.wadim.osmdroid_test.helper.Note;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,7 +34,10 @@ import java.util.List;
 
 public class DetailsFragment extends Fragment {
 
+    private DatabaseHelper db;
+
     private int id;
+    private long dbId;
     private TextView idTextView;
     public TextView name, grade, lon, lat;
     public ImageView thumbnail, type;
@@ -49,16 +54,18 @@ public class DetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DetailsFragment newInstance(int id) {
+    public static DetailsFragment newInstance( int id, long dbId) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
         args.putInt("id", id);
+        args.putLong("dbId", dbId);
         fragment.setArguments(args);
         return fragment;
     }
 
     private void readBundle(Bundle bundle) {
         if (bundle != null) {
+            dbId = bundle.getLong("dbId");
             id = bundle.getInt("id");
             StringBuilder stringBuilder = new StringBuilder(URL0);
             stringBuilder.append(id);
@@ -117,13 +124,32 @@ public class DetailsFragment extends Fragment {
 
         readBundle(getArguments());
 
-
         name = MyFragmentView.findViewById(R.id.title);
         grade = MyFragmentView.findViewById(R.id.grade);
         thumbnail = MyFragmentView.findViewById(R.id.thumbnail);
         lat = MyFragmentView.findViewById(R.id.lat);
         lon = MyFragmentView.findViewById(R.id.lon);
-        fetchStoreItems();
+
+        if(dbId!=0)
+        {
+            db = new DatabaseHelper(getContext());
+            Note route = db.getNote(dbId);
+            name.setText((String)route.getName());
+            grade.setText((String)route.getGrade());
+            String stringDouble= Double.toString((Double)route.getLat());
+            lat.setText(stringDouble);
+            stringDouble= Double.toString((Double)route.getLon());
+            lon.setText(stringDouble);
+            Glide.with(getActivity())
+                    .load((String)route.getImg())
+                    .into(thumbnail);
+        }
+        else
+        {
+            fetchStoreItems();
+
+        }
+
 
 
         //type = MyFragmentView.findViewById(R.id.type);

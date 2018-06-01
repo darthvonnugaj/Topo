@@ -24,7 +24,7 @@
         android:paddingRight="@dimen/card_title_padding"
         android:paddingTop="@dimen/card_title_padding"
         android:textColor="#111"
-        android:textSize="11dp" />
+        android:textSize="@dimen/note_list_text" /> />
 
     <TextView
         android:id="@+id/grade"
@@ -34,7 +34,7 @@
         android:layout_marginRight="10dp"
         android:gravity="right"
         android:paddingBottom="@dimen/card_price_padding_bottom"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorDetails"
         android:textSize="11dp" />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_marginRight="10dp"
         android:gravity="right"
         android:paddingBottom="@dimen/card_price_padding_bottom"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorDetails"
         android:textSize="11dp" />
 
     <TextView
@@ -56,7 +56,7 @@
         android:layout_marginRight="10dp"
         android:gravity="right"
         android:paddingBottom="@dimen/card_price_padding_bottom"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorDetails"
         android:textSize="11dp" />
 
 

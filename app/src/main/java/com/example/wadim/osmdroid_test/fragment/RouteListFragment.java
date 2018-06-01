@@ -26,17 +26,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.example.wadim.osmdroid_test.Movie;
 import com.example.wadim.osmdroid_test.Route;
 import com.example.wadim.osmdroid_test.app.MyApplication;
+import com.example.wadim.osmdroid_test.helper.DatabaseHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +55,10 @@ public class RouteListFragment extends Fragment {
     // url to fetch shopping items
    // private static final String URL = "http://ec2-18-184-119-144.eu-central-1.compute.amazonaws.com/api/routes/50/19";//"https://api.androidhive.info/json/movies_2017.json";
     private String URL;
+
+    private static String URL0 = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
+    private static String URL2 = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
+
     private RecyclerView recyclerView;
     private List<Route> itemsList;
     private StoreAdapter mAdapter;
@@ -230,7 +239,7 @@ public class RouteListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     //DetailsFragment fragment = new DetailsFragment();
-                    Fragment fragment = DetailsFragment.newInstance(route.getId());
+                    Fragment fragment = DetailsFragment.newInstance(route.getId(), 0);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame_container, fragment);
                     transaction.addToBackStack(null);
@@ -261,23 +270,78 @@ public class RouteListFragment extends Fragment {
         class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
             private int selectedId;
+            private DatabaseHelper db;
+
+
 
             public MyMenuItemClickListener() {
             }
 
             public MyMenuItemClickListener(int id) {
                 this.selectedId = id;
+                db = new DatabaseHelper(getContext());
+            }
+
+            private void fetchStoreItems() {
+                StringBuilder stringBuilder = new StringBuilder(URL0);
+                stringBuilder.append(selectedId);
+                URL2 = stringBuilder.toString();
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, URL2, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //mTextView.setText("Response: " + response.toString());
+                                //Toast.makeText(getActivity(), "LOADED", Toast.LENGTH_LONG).show();
+                                try {
+                                    Route route = new Route();
+                                    route.setId((int)response.get("id"));
+                                    route.setName((String)response.get("name"));
+                                    route.setType((int)response.get("type"));
+                                    route.setGrade((String)response.get("grade"));
+                                    route.setImage((String)response.get("img"));
+                                    route.setLat((Double)response.get("lat"));
+                                    route.setLon((Double)response.get("lon"));
+                                    long id = db.insertNote(route);
+                                    if(id==0)
+                                    {
+                                        Toast.makeText(getActivity(), "Route already added", Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        Toast.makeText(getActivity(), "Added to favourite", Toast.LENGTH_LONG).show();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+
+                            }
+                        });
+
+                MyApplication instance = MyApplication.getInstance();
+                instance.addToRequestQueue(jsonObjectRequest);
+
+
             }
 
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_add_favourite:
-                        Toast.makeText(context, "Add to favourite", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "Add to favourite", Toast.LENGTH_SHORT).show();
+                        fetchStoreItems();
                         return true;
                     case R.id.action_details:
                         //DetailsFragment fragment = new DetailsFragment();
-                        Fragment fragment = DetailsFragment.newInstance(selectedId);
+                        Fragment fragment = DetailsFragment.newInstance(selectedId, 0);
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.frame_container, fragment);
                         transaction.addToBackStack(null);
