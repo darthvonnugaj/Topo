@@ -6,6 +6,7 @@
     <dimen name="card_margin">5dp</dimen>
     <dimen name="card_album_radius">0dp</dimen>
     <dimen name="card_cover_height">130dp</dimen>
+    <dimen name="details_thumbnail_height">230dp</dimen>
     <dimen name="card_title_padding">10dp</dimen>
     <dimen name="card_price_padding_bottom">5dp</dimen>
 
@@ -22,4 +23,5 @@
     <dimen name="dot_text_size">40sp</dimen>
     <dimen name="timestamp">14sp</dimen>
     <dimen name="note_list_text">18sp</dimen>
+    <dimen name="dot_margin_thumbnail">20dp</dimen>
 </resources>

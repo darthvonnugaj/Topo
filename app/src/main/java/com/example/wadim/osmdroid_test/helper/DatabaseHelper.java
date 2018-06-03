@@ -48,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public long insertNote(Route note) {
 
+
         SQLiteDatabase readDb = this.getReadableDatabase();
 
         Cursor cursor = readDb.query(Note.TABLE_NAME,
@@ -56,9 +57,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(note.getId())}, null, null, null, null);
 
 
-    if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
+
         return 0;
-    }
+        }
     // get writable database as we want to write data
     SQLiteDatabase db = this.getWritableDatabase();
 
@@ -83,7 +85,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     return id;
     }
 
+    public long isSaved (long routeId)
+    {
+        SQLiteDatabase readDb = this.getReadableDatabase();
 
+        Cursor cursor = readDb.query(Note.TABLE_NAME,
+                new String[]{Note.COLUMN_ID, Note.COLUMN_ROUTEID, Note.COLUMN_NAME, Note.COLUMN_TYPE, Note.COLUMN_GRADE, Note.COLUMN_IMG, Note.COLUMN_LAT, Note.COLUMN_LON, Note.COLUMN_TIMESTAMP},
+                Note.COLUMN_ROUTEID + "=?",
+                new String[]{String.valueOf(routeId)}, null, null, null, null);
+
+
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID));
+        }
+        return 0;
+    }
 
     public Note getNote(long id) {
         // get readable database as we are not inserting anything
@@ -114,6 +130,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return note;
     }
+
+    public Note getRoute(long routeId) {
+        // get readable database as we are not inserting anything
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(Note.TABLE_NAME,
+                new String[]{Note.COLUMN_ID, Note.COLUMN_ROUTEID, Note.COLUMN_NAME, Note.COLUMN_TYPE, Note.COLUMN_GRADE, Note.COLUMN_IMG, Note.COLUMN_LAT, Note.COLUMN_LON, Note.COLUMN_TIMESTAMP},
+                Note.COLUMN_ROUTEID + "=?",
+                new String[]{String.valueOf(routeId)}, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // prepare note object
+        Note note = new Note(
+                cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID)),
+                cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ROUTEID)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_NAME)),
+                cursor.getInt(cursor.getColumnIndex(Note.COLUMN_TYPE)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_GRADE)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_IMG)),
+                cursor.getDouble(cursor.getColumnIndex(Note.COLUMN_LAT)),
+                cursor.getDouble(cursor.getColumnIndex(Note.COLUMN_LON)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)));
+
+        // close the db connection
+        cursor.close();
+
+        return note;
+    }
+
 
     public List<Note> getAllNotes() {
         List<Note> notes = new ArrayList<>();
@@ -181,6 +228,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(Note.TABLE_NAME, Note.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(note.getId())});
+        db.close();
+    }
+
+    public void deleteNote(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Note.TABLE_NAME, Note.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(id)});
         db.close();
     }
 

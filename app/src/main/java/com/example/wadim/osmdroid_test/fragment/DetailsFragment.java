@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,20 +37,26 @@ import java.util.List;
 
 public class DetailsFragment extends Fragment {
 
-    private DatabaseHelper db;
+
 
     private int id;
     private long dbId;
-    private TextView idTextView;
+    private static long removeId;
+
     public TextView name, grade, lon, lat;
     public ImageView thumbnail, type;
+    private Button addFav;
+    private Button removeFav;
 
-    private Route itemsList;
+    private  static Route route;
+    private  Note note;
     private static final String TAG = DetailsFragment.class.getSimpleName();
 
 
     private static String URL0 = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
     private static String URL = "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/";
+
+
 
 
     public DetailsFragment() {
@@ -80,14 +89,22 @@ public class DetailsFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         //mTextView.setText("Response: " + response.toString());
-                        Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
                         try {
+                            route = new Route();
+                            route.setId((int)response.get("id"));
+                            route.setName((String)response.get("name"));
                             name.setText((String)response.get("name"));
+                            route.setGrade((String)response.get("grade"));
                             grade.setText((String)response.get("grade"));
+                            route.setType((int)response.get("type"));
                             String stringDouble= Double.toString((Double)response.get("lat"));
+                            route.setLat((double)response.get("lat"));
                             lat.setText(stringDouble);
                             stringDouble= Double.toString((Double)response.get("lon"));
+                            route.setLon((double)response.get("lon"));
                             lon.setText(stringDouble);
+                            route.setImage((String)response.get("img"));
                             Glide.with(getActivity())
                                     .load((String)response.get("img"))
                                     .into(thumbnail);
@@ -107,6 +124,7 @@ public class DetailsFragment extends Fragment {
 
         MyApplication instance = MyApplication.getInstance();
         instance.addToRequestQueue(jsonObjectRequest);
+
     }
 
 
@@ -124,38 +142,75 @@ public class DetailsFragment extends Fragment {
 
         readBundle(getArguments());
 
+        note = new Note();
+        DatabaseHelper db = new DatabaseHelper(getContext());
         name = MyFragmentView.findViewById(R.id.title);
         grade = MyFragmentView.findViewById(R.id.grade);
         thumbnail = MyFragmentView.findViewById(R.id.thumbnail);
         lat = MyFragmentView.findViewById(R.id.lat);
         lon = MyFragmentView.findViewById(R.id.lon);
 
+        addFav = (Button) MyFragmentView.findViewById(R.id.btnAdd);
+        removeFav = (Button) MyFragmentView.findViewById(R.id.btnRemove);
+
+
+
         if(dbId!=0)
         {
-            db = new DatabaseHelper(getContext());
-            Note route = db.getNote(dbId);
-            name.setText((String)route.getName());
-            grade.setText((String)route.getGrade());
-            String stringDouble= Double.toString((Double)route.getLat());
+            addFav.setVisibility(View.GONE);
+            removeFav.setVisibility(View.VISIBLE);
+
+            note = db.getNote(dbId);
+            removeId = (int) note.getId();
+            name.setText((String)note.getName());
+            grade.setText((String)note.getGrade());
+            String stringDouble= Double.toString((Double)note.getLat());
             lat.setText(stringDouble);
-            stringDouble= Double.toString((Double)route.getLon());
+            stringDouble= Double.toString((Double)note.getLon());
             lon.setText(stringDouble);
             Glide.with(getActivity())
-                    .load((String)route.getImg())
+                    .load((String)note.getImg())
                     .into(thumbnail);
         }
         else
         {
-            fetchStoreItems();
+            long searchId = db.isSaved(id);
+            //sprawdzic czy jest w bazie danych
+            if(searchId!=0)
+            {
+
+                addFav.setVisibility(View.GONE);
+                removeFav.setVisibility(View.VISIBLE);
+                note =db.getNote(searchId);
+                removeId = (int)note.getId();
+                name.setText((String)note.getName());
+                grade.setText((String)note.getGrade());
+                String stringDouble= Double.toString((Double)note.getLat());
+                lat.setText(stringDouble);
+                stringDouble= Double.toString((Double)note.getLon());
+                lon.setText(stringDouble);
+                Glide.with(getActivity())
+                        .load((String)note.getImg())
+                        .into(thumbnail);
+            }
+            else {
+                addFav.setVisibility(View.VISIBLE);
+                removeFav.setVisibility(View.GONE);
+                fetchStoreItems();
+            }
+
+
 
         }
 
-
+        initButtonOnClick();
 
         //type = MyFragmentView.findViewById(R.id.type);
 
         return  MyFragmentView;
     }
+
+
 
     @Override
     public void onResume() {
@@ -169,6 +224,38 @@ public class DetailsFragment extends Fragment {
         super.onStart();
         readBundle(getArguments());
         fetchStoreItems();
+    }
+
+
+    private void initButtonOnClick() {
+
+        addFav.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //add to favourites
+                DatabaseHelper db =new DatabaseHelper(getContext());
+                removeId = db.insertNote(route);
+                //db.insertNote(route);
+                addFav.setVisibility(View.GONE);
+                removeFav.setVisibility(View.VISIBLE);
+                showToast("Route addded to favourites");
+            }
+        });
+
+        removeFav.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //add to favourites
+                DatabaseHelper db =new DatabaseHelper(getContext());
+                db.deleteNote(removeId);
+                addFav.setVisibility(View.VISIBLE);
+                removeFav.setVisibility(View.GONE);
+                showToast("Route remove from favourites");
+            }
+        });
+    }
+
+
+    private void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
 

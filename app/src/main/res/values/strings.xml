@@ -17,4 +17,7 @@
     <string name="lbl_new_note_title">New Note</string>
     <string name="lbl_edit_note_title">Edit Note</string>
     <string name="hint_enter_note">Enter your note!</string>
+
+    <string name="add_favourite">Add to favourites</string>
+    <string name="remove_favourite">Remove from favourites</string>
 </resources>

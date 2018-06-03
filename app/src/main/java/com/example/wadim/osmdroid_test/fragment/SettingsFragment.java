@@ -32,7 +32,6 @@ public class SettingsFragment extends Fragment {
     private RadioButton radioSexButton;
     private int selectedId;
 
-    private TextView lat, lon;
     private SharedPreferences preferences;
 
     public SettingsFragment() {
@@ -109,13 +108,6 @@ public class SettingsFragment extends Fragment {
         btnSave = (Button) MyFragmentView.findViewById(R.id.btnSave);
         radioSexGroup = (RadioGroup) MyFragmentView.findViewById(R.id.radioSex);
 
-        lat = (TextView) MyFragmentView.findViewById(R.id.lat);
-        lon = (TextView) MyFragmentView.findViewById(R.id.lon);
-
-        String stringdouble= Integer.toString((int)(((MyApplication) getActivity().getApplication()).getLat()));
-        lat.setText(stringdouble);
-        stringdouble= Integer.toString((int)(((MyApplication) getActivity().getApplication()).getLon()));
-        lon.setText(stringdouble);
         initButtonOnClick(MyFragmentView);
         restoreData(MyFragmentView);
         return MyFragmentView;

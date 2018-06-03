@@ -88,6 +88,11 @@ public class FavouritesFragment extends Fragment {
         return MyFragmentView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
 
 
     /**
@@ -102,6 +107,7 @@ public class FavouritesFragment extends Fragment {
         notesList.remove(position);
         mAdapter.notifyItemRemoved(position);
 
+
         toggleEmptyNotes();
     }
 
@@ -111,7 +117,7 @@ public class FavouritesFragment extends Fragment {
      * Delete - 0
      */
     private void showActionsDialog(final int position) {
-        CharSequence colors[] = new CharSequence[]{"Detail", "Delete"};
+        CharSequence colors[] = new CharSequence[]{"Route details", "Delete route"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Choose option");
@@ -122,7 +128,7 @@ public class FavouritesFragment extends Fragment {
                     Fragment fragment = DetailsFragment.newInstance(0,notesList.get(position).getId());
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame_container, fragment);
-                    transaction.addToBackStack(null);
+                     transaction.addToBackStack(null);
                     transaction.commit();
                     ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
                     actionBar.setTitle("Route Details");

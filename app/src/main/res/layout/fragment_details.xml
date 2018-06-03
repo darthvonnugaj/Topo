@@ -10,8 +10,9 @@
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_cover_height"
+        android:layout_height="@dimen/details_thumbnail_height"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_margin="@dimen/dot_margin_thumbnail"
         android:scaleType="fitXY" />
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/thumbnail"
+        android:gravity="center_horizontal"
         android:lines="2"
         android:paddingLeft="@dimen/card_title_padding"
         android:paddingRight="@dimen/card_title_padding"
@@ -32,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_marginRight="10dp"
-        android:gravity="right"
+        android:gravity="center_horizontal"
         android:paddingBottom="@dimen/card_price_padding_bottom"
         android:textColor="@color/colorDetails"
         android:textSize="11dp" />
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/grade"
         android:layout_marginRight="10dp"
-        android:gravity="right"
+        android:gravity="center_horizontal"
         android:paddingBottom="@dimen/card_price_padding_bottom"
         android:textColor="@color/colorDetails"
         android:textSize="11dp" />
@@ -54,11 +56,30 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/lon"
         android:layout_marginRight="10dp"
-        android:gravity="right"
+        android:gravity="center_horizontal"
         android:paddingBottom="@dimen/card_price_padding_bottom"
         android:textColor="@color/colorDetails"
         android:textSize="11dp" />
 
+    <Button
+    android:id="@+id/btnAdd"
+    android:layout_width="171dp"
+    android:layout_height="68dp"
+    android:text="@string/add_favourite"
+    android:layout_below="@id/lat"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="10dp"
+    />
+
+    <Button
+        android:id="@+id/btnRemove"
+        android:layout_width="171dp"
+        android:layout_height="68dp"
+        android:text="@string/remove_favourite"
+        android:layout_below="@id/lat"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        />
 
 
 </RelativeLayout>
