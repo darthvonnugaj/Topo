@@ -129,8 +129,8 @@ public class MapFragment extends Fragment  {
         mLocationOverlay = new MyOwnLocationOverlay(provider, map);
         mLocationOverlay.setDrawAccuracyEnabled(true);
         mLocationOverlay.enableMyLocation();
-        //mLocationOverlay.disableFollowLocation();
-        //mLocationOverlay.setDrawAccuracyEnabled(true);
+        mLocationOverlay.disableFollowLocation();
+        mLocationOverlay.setDrawAccuracyEnabled(true);
 
         SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         Integer radius = preferences.getInt(PREFERENCES_RADIUS, 20);
@@ -174,13 +174,21 @@ public class MapFragment extends Fragment  {
 
                         Paint textStyle = new Paint();
                         textStyle.setStyle(Paint.Style.FILL);
-                        textStyle.setColor(Color.parseColor("#0000ff"));
+                        textStyle.setColor(Color.parseColor("#e0680d"));
                         textStyle.setTextAlign(Paint.Align.CENTER);
                         textStyle.setTextSize(24);
 
                         SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
                                 .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                                .setRadius(9).setIsClickable(true).setCellSize(25).setTextStyle(textStyle);
+                                .setRadius(9).setIsClickable(true).setCellSize(10).setTextStyle(textStyle);
+
+                        Paint circlePainter = new Paint();
+                        circlePainter.setAntiAlias(true);
+                        circlePainter.setStrokeWidth(2.0f);
+                        circlePainter.setColor(Color.parseColor("#d30a0a"));
+                        circlePainter.setStyle(Paint.Style.FILL_AND_STROKE);
+
+                        opt.setPointStyle(circlePainter).setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE);
 
                         final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
                         sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
