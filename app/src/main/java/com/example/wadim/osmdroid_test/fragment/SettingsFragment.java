@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wadim.osmdroid_test.R;
@@ -21,20 +23,20 @@ import com.example.wadim.osmdroid_test.R;
 public class SettingsFragment extends Fragment {
 
     public static final String PREFERENCES_NAME = "myPreferences";
-    public static final String PREFERENCES_TEXT_FIELD = "radius";
+    public static final String PREFERENCES_RADIUS = "radiuskm";
     public static final String GRID_FIELD = "grid";
     private EditText etToSave;
-    private Button btnSave;
+    private SeekBar radiusBar;
 
     private RadioGroup radioGridGroup;
     private RadioButton radioGridButton;
     private int selectedId;
 
     private SharedPreferences preferences;
+    private TextView tvProgressLabel;
 
     public SettingsFragment() {
         // Required empty public constructor
-
     }
 
     public static SettingsFragment newInstance(String param1, String param2) {
@@ -47,74 +49,78 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         preferences = this.getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    private void initButtonOnClick(final View fragmentView) {
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            selectedId = radioGridGroup.getCheckedRadioButtonId();
-            radioGridButton = (RadioButton) fragmentView.findViewById(selectedId);
-
-            saveData();
-            showToast("Data saved");
-            }
-        });
-    }
-
-    private void saveData() {
-        SharedPreferences.Editor preferencesEditor = preferences.edit();
-        String editTextData = etToSave.getText().toString();
-        preferencesEditor.putString(PREFERENCES_TEXT_FIELD, editTextData);
-        switch (selectedId){
-            case R.id.radioMale:
-                preferencesEditor.putInt(GRID_FIELD, 0);
-                break;
-            case R.id.radioFemale:
-                preferencesEditor.putInt(GRID_FIELD, 1);
-                break;
-        }
-
-        preferencesEditor.apply();
-    }
-
     private void restoreData(final View fragmentView) {
-        String textFromPreferences = preferences.getString(PREFERENCES_TEXT_FIELD, "3");
-        etToSave.setText(textFromPreferences);
+        Integer radius = preferences.getInt(PREFERENCES_RADIUS, 20);
+        radiusBar.setProgress(radius);
+
         int intGrid = preferences.getInt(GRID_FIELD, 0);
-       if (intGrid == 0)
+        if (intGrid == 0)
         {
             radioGridButton = (RadioButton) fragmentView.findViewById(R.id.radioMale);
             radioGridButton.setChecked(true);
         }
         else {
-           radioGridButton = (RadioButton) fragmentView.findViewById(intGrid);
+           radioGridButton = (RadioButton) fragmentView.findViewById(R.id.radioFemale);
            radioGridButton.setChecked(true);
         }
-
-
     }
-
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        radioGridGroup = (RadioGroup) view.findViewById(R.id.radioSex);
+        radioGridGroup.setOnCheckedChangeListener(radioChangeListener);
 
-        View MyFragmentView = inflater.inflate(R.layout.fragment_settings, container, false);
-        // Inflate the layout for this fragment
-        etToSave = (EditText) MyFragmentView.findViewById(R.id.etToSave);
-        btnSave = (Button) MyFragmentView.findViewById(R.id.btnSave);
-        radioGridGroup = (RadioGroup) MyFragmentView.findViewById(R.id.radioSex);
+        radiusBar =  view.findViewById(R.id.seekBar);
+        radiusBar.setOnSeekBarChangeListener(seekBarChangeListener);
 
-        initButtonOnClick(MyFragmentView);
-        restoreData(MyFragmentView);
-        return MyFragmentView;
-        //return inflater.inflate(R.layout.fragment_settings, container, false);
+        int progress = radiusBar.getProgress();
+        tvProgressLabel = view.findViewById(R.id.radius_progress);
+        tvProgressLabel.setText("Route search radius: " + progress + " km");
+
+        restoreData(view);
+        return view;
     }
 
+    SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            // updated continuously as the user slides the thumb
+            tvProgressLabel.setText("Route search radius: " + progress + " km");
+            SharedPreferences.Editor preferencesEditor = preferences.edit();
+            preferencesEditor.putInt(PREFERENCES_RADIUS, progress);
+            preferencesEditor.apply();
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            // called when the user first touches the SeekBar
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // called after the user finishes moving the SeekBar
+        }
+    };
+
+    RadioGroup.OnCheckedChangeListener radioChangeListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int i) {
+            selectedId = radioGroup.getCheckedRadioButtonId();
+            SharedPreferences.Editor preferencesEditor = preferences.edit();
+            switch (selectedId){
+                case R.id.radioMale:
+                    preferencesEditor.putInt(GRID_FIELD, 0);
+                    break;
+                case R.id.radioFemale:
+                    preferencesEditor.putInt(GRID_FIELD, 1);
+                    break;
+            }
+            preferencesEditor.apply();
+        }
+    };
 }

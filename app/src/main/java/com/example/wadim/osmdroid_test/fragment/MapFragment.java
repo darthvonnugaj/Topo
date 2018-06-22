@@ -33,19 +33,12 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.kml.KmlDocument;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MinimapOverlay;
-import org.osmdroid.views.overlay.Polygon;
-import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
 import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
@@ -56,7 +49,7 @@ import java.util.List;
 
 import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.GRID_FIELD;
 import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_NAME;
-import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_TEXT_FIELD;
+import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_RADIUS;
 
 
 public class MapFragment extends Fragment  {
@@ -140,8 +133,8 @@ public class MapFragment extends Fragment  {
         //mLocationOverlay.setDrawAccuracyEnabled(true);
 
         SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        Integer textFromPreferences = Integer.parseInt(preferences.getString(PREFERENCES_TEXT_FIELD, "5"));
-        mLocationOverlay.setKmeters(textFromPreferences);
+        Integer radius = preferences.getInt(PREFERENCES_RADIUS, 20);
+        mLocationOverlay.setKmeters(radius);
 
         mLocationOverlay.runOnFirstFix(new Runnable()
         { public void run()
