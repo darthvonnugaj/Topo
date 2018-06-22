@@ -9,6 +9,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +22,10 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.wadim.osmdroid_test.R;
 import com.example.wadim.osmdroid_test.Route;
 import com.example.wadim.osmdroid_test.app.MyApplication;
+import com.example.wadim.osmdroid_test.helper.RouteGeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -115,50 +120,7 @@ public class MapFragment extends Fragment  {
         mMinimapOverlay.setHeight(dm.heightPixels / 5);
         mMinimapOverlay.setPadding(50);
         mMinimapOverlay.setZoomDifference(4);
-        //optionally, you can set the minimap to a different tile source
-        //mMinimapOverlay.setTileSource(....);
         map.getOverlays().add(this.mMinimapOverlay);
-
-
-        //List<Route> routes = instance.routes;
-        //List<IGeoPoint> points = new ArrayList<>();
-
-        /*for (Iterator<Route> i = routes.iterator(); i.hasNext();) {
-            Route route = i.next();
-            points.add(new LabelledGeoPoint(route.getLat(), route.getLon()
-                    , "Point #" + i));
-        }
-
-
-        List<IGeoPoint> points = new ArrayList<>();
-        for (int i = 0; i < 10000; i++) {
-            points.add(new LabelledGeoPoint(37 + Math.random() * 5, -8 + Math.random() * 5
-                    , "Point #" + i));
-        }
-
-        SimplePointTheme pt = new SimplePointTheme(points, true);
-
-        Paint textStyle = new Paint();
-        textStyle.setStyle(Paint.Style.FILL);
-        textStyle.setColor(Color.parseColor("#0000ff"));
-        textStyle.setTextAlign(Paint.Align.CENTER);
-        textStyle.setTextSize(24);
-
-        SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
-                .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                .setRadius(7).setIsClickable(true).setCellSize(15).setTextStyle(textStyle);
-
-        final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
-        sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
-            @Override
-            public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
-                Toast.makeText(map.getContext()
-                        , "You clicked " + ((LabelledGeoPoint) points.get(point)).getLabel()
-                        , Toast.LENGTH_SHORT).show();
-            }
-        });
-        map.getOverlays().add(sfpo);
-        map.invalidate();*/
     }
 
     private void initMyLocationNewOverlay() {
@@ -186,7 +148,7 @@ public class MapFragment extends Fragment  {
     }
 
     private void fetchStoreItems() {
-        JsonArrayRequest request = new JsonArrayRequest("http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/50/19/",
+        JsonArrayRequest request = new JsonArrayRequest("http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -203,8 +165,7 @@ public class MapFragment extends Fragment  {
                         List<IGeoPoint> points = new ArrayList<>();
                         for (Iterator<Route> i = routes.iterator(); i.hasNext();) {
                             Route route = i.next();
-                            points.add(new LabelledGeoPoint(route.getLat(), route.getLon()
-                                    , "Point #" + route.getName()));
+                            points.add(new RouteGeoPoint(route));
                         }
 
                         SimplePointTheme pt = new SimplePointTheme(points, true);
@@ -223,9 +184,14 @@ public class MapFragment extends Fragment  {
                         sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
                             @Override
                             public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
-                                Toast.makeText(map.getContext()
-                                        , "You clicked " + ((LabelledGeoPoint) points.get(point)).getLabel()
-                                        , Toast.LENGTH_SHORT).show();
+                                int routeId = ((RouteGeoPoint) points.get(point)).getId();
+                                Fragment fragment = DetailsFragment.newInstance(routeId, 0);
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame_container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                                actionBar.setTitle("Route Details");
                             }
                         });
                         map.getOverlays().add(sfpo);
