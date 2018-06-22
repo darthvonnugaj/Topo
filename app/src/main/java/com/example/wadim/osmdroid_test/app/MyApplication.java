@@ -95,6 +95,6 @@ public class MyApplication extends Application {
     }
 
     public String getUrl() {
-        return "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/" + Integer.toString((int) lat) + "/" + Integer.toString((int) lon);
+        return "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/" + Double.toString(lat) + "/" + Double.toString(lon);
     }
 }

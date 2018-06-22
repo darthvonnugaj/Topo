@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.wadim.osmdroid_test.R;
 import com.example.wadim.osmdroid_test.Route;
 import com.example.wadim.osmdroid_test.app.MyApplication;
+import com.example.wadim.osmdroid_test.helper.MyOwnLocationOverlay;
 import com.example.wadim.osmdroid_test.helper.RouteGeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -39,6 +40,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.Polygon;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
@@ -104,10 +107,6 @@ public class MapFragment extends Fragment  {
 
         IMapController mapController = map.getController();
         mapController.setZoom(13);
-        //GeoPoint startPoint = new GeoPoint(49.1875, 20.0625);
-        //mapController.setCenter(startPoint);
-
-        //mapController.setCenter(initMyLocationNewOverlay());
         initMyLocationNewOverlay();
         mapController.setCenter(((MyApplication) getActivity().getApplication()).getGeoPoint());
 
@@ -127,17 +126,32 @@ public class MapFragment extends Fragment  {
         GpsMyLocationProvider provider = new GpsMyLocationProvider(getActivity());
         provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
         mLocationOverlay = new MyLocationNewOverlay(provider, map);
+        //mLocationOverlay.setMeters(123);
         mLocationOverlay.setDrawAccuracyEnabled(true);
         mLocationOverlay.enableMyLocation();
+        //mLocationOverlay.disableFollowLocation();
+        //mLocationOverlay.setDrawAccuracyEnabled(true);
         mLocationOverlay.runOnFirstFix(new Runnable()
         { public void run()
             {
                 ((MyApplication) getActivity().getApplication()).setLat( mLocationOverlay.getMyLocation().getLatitude());
                 ((MyApplication) getActivity().getApplication()).setLon( mLocationOverlay.getMyLocation().getLongitude());
+                IMapController mapController = map.getController();
+                mapController.animateTo(mLocationOverlay.getMyLocation());
             }
         });
         map.getOverlays().add(mLocationOverlay);
-        map.invalidate();// }
+        map.invalidate();
+
+        Polygon oPolygon = new Polygon();
+        final double radius = 161;
+        ArrayList<GeoPoint> circlePoints = new ArrayList<GeoPoint>();
+        for (float f = 0; f < 360; f += 1){
+            circlePoints.add(new GeoPoint(0 , 0 ).destinationPoint(radius, f));
+        }
+        oPolygon.setPoints(circlePoints);
+        map.getOverlays().add(oPolygon);
+        map.invalidate();
 
         //map.getOverlayManager().add(mLocationOverlay);
         //double latitude = (mLocationOverlay.getMyLocation().getLatitudeE6())/ 1e6;
