@@ -30,16 +30,20 @@ public class MyOwnLocationOverlay extends MyLocationNewOverlay {
         this.meters = meters;
     }
 
-    public synchronized void draw(Canvas canvas, MapView mapView,
-                                     boolean shadow, long when) {
+    public void setKmeters(int kmeters){
+        this.meters = 1000*kmeters;
+    }
+
+    @Override
+    public void draw(Canvas canvas, MapView mapView, boolean shadow) {
         // Set the painter to paint our circle. setColor = blue, setAlpha = 70 so the background
         // can still be seen. Feel free to change these settings
         circlePainter = new Paint();
         circlePainter.setAntiAlias(true);
-        circlePainter.setStrokeWidth(2.0f);
+        circlePainter.setStrokeWidth(8.0f);
         circlePainter.setColor(0xff6666ff);
         circlePainter.setStyle(Paint.Style.FILL_AND_STROKE);
-        circlePainter.setAlpha(70);
+        circlePainter.setAlpha(50);
 
         // Get projection from the mapView.
         Projection projection = mapView.getProjection();

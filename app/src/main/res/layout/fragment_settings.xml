@@ -15,24 +15,33 @@
         android:text="Settings"
         android:textSize="22dp" />
 
+    <TextView
+        android:id="@+id/radius_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="48dp"
+        android:text="Search radius [km]"
+        android:textSize="17dp" />
+
     <EditText
         android:id="@+id/etToSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/title_settings"
-        android:layout_below="@id/settings"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radius_info"
+        android:hint="@string/title_radius"
         android:textSize="22dp" />
-
 
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="171dp"
         android:layout_height="68dp"
-        android:text="@string/btn_settings"
-        android:layout_below="@id/radioSex"
-        android:layout_alignParentLeft="true"
-        />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radioSex"
+        android:layout_marginTop="19dp"
+        android:text="@string/btn_settings" />
 
     <RadioGroup
         android:id="@+id/radioSex"
@@ -45,14 +54,14 @@
             android:id="@+id/radioMale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/radio_male"
-            android:checked="true" />
+            android:checked="true"
+            android:text="@string/radio_hide_grid" />
 
         <RadioButton
             android:id="@+id/radioFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/radio_female" />
+            android:text="@string/radio_show_grid" />
 
     </RadioGroup>
 

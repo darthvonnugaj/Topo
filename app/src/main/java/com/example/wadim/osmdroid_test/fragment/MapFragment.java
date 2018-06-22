@@ -42,6 +42,7 @@ import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MinimapOverlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
@@ -53,11 +54,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.GRID_FIELD;
+import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_NAME;
+import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_TEXT_FIELD;
+
 
 public class MapFragment extends Fragment  {
     private SharedPreferences mPrefs;
     private MapView map;
-    private MyLocationNewOverlay mLocationOverlay;
+    private MyOwnLocationOverlay mLocationOverlay;
     private MinimapOverlay mMinimapOverlay;
     public List<Route> itemsList;
 
@@ -110,9 +115,12 @@ public class MapFragment extends Fragment  {
         initMyLocationNewOverlay();
         mapController.setCenter(((MyApplication) getActivity().getApplication()).getGeoPoint());
 
-        //@TODO Grid -> to settings
-        //LatLonGridlineOverlay2 overlay = new LatLonGridlineOverlay2();
-        //map.getOverlays().add(overlay);
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        Integer showGrid = preferences.getInt(GRID_FIELD,0);
+        if(showGrid == 1){
+            LatLonGridlineOverlay2 overlay = new LatLonGridlineOverlay2();
+            map.getOverlays().add(overlay);
+        }
 
         mMinimapOverlay = new MinimapOverlay(context, map.getTileRequestCompleteHandler());
         mMinimapOverlay.setWidth(dm.widthPixels / 5);
@@ -125,12 +133,16 @@ public class MapFragment extends Fragment  {
     private void initMyLocationNewOverlay() {
         GpsMyLocationProvider provider = new GpsMyLocationProvider(getActivity());
         provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
-        mLocationOverlay = new MyLocationNewOverlay(provider, map);
-        //mLocationOverlay.setMeters(123);
+        mLocationOverlay = new MyOwnLocationOverlay(provider, map);
         mLocationOverlay.setDrawAccuracyEnabled(true);
         mLocationOverlay.enableMyLocation();
         //mLocationOverlay.disableFollowLocation();
         //mLocationOverlay.setDrawAccuracyEnabled(true);
+
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        Integer textFromPreferences = Integer.parseInt(preferences.getString(PREFERENCES_TEXT_FIELD, "5"));
+        mLocationOverlay.setKmeters(textFromPreferences);
+
         mLocationOverlay.runOnFirstFix(new Runnable()
         { public void run()
             {
@@ -142,23 +154,6 @@ public class MapFragment extends Fragment  {
         });
         map.getOverlays().add(mLocationOverlay);
         map.invalidate();
-
-        Polygon oPolygon = new Polygon();
-        final double radius = 161;
-        ArrayList<GeoPoint> circlePoints = new ArrayList<GeoPoint>();
-        for (float f = 0; f < 360; f += 1){
-            circlePoints.add(new GeoPoint(0 , 0 ).destinationPoint(radius, f));
-        }
-        oPolygon.setPoints(circlePoints);
-        map.getOverlays().add(oPolygon);
-        map.invalidate();
-
-        //map.getOverlayManager().add(mLocationOverlay);
-        //double latitude = (mLocationOverlay.getMyLocation().getLatitudeE6())/ 1e6;
-
-        //double longitude = (mLocationOverlay.getMyLocation().getLongitudeE6())/ 1e6;
-        //GeoPoint startPoint = new GeoPoint(latitude, longitude);
-        //return startPoint;
     }
 
     private void fetchStoreItems() {

@@ -3,10 +3,10 @@
     <string name="title_map">Map</string>
     <string name="title_list">Route List</string>
     <string name="title_folder">Favourites</string>
-    <string name="title_settings">Settings</string>
+    <string name="title_radius">5</string>
     <string name="btn_settings">Save settings</string>
-    <string name="radio_male">Male</string>
-    <string name="radio_female">Female</string>
+    <string name="radio_hide_grid">Hide grid</string>
+    <string name="radio_show_grid">Show grid</string>
     <string name="resume">RESUME LOCATION UPDATES</string>
     <string name="pause">PAUSE LOCATION UPDATES</string>
 

@@ -13,23 +13,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wadim.osmdroid_test.R;
-import com.example.wadim.osmdroid_test.app.MyApplication;
 
 
 public class SettingsFragment extends Fragment {
 
-    private static final String PREFERENCES_NAME = "myPreferences";
-    private static final String PREFERENCES_TEXT_FIELD = "textField";
-    private static final String GENDER_FIELD = "gender";
+    public static final String PREFERENCES_NAME = "myPreferences";
+    public static final String PREFERENCES_TEXT_FIELD = "radius";
+    public static final String GRID_FIELD = "grid";
     private EditText etToSave;
     private Button btnSave;
 
-    private RadioGroup radioSexGroup;
-    private RadioButton radioSexButton;
+    private RadioGroup radioGridGroup;
+    private RadioButton radioGridButton;
     private int selectedId;
 
     private SharedPreferences preferences;
@@ -56,14 +54,11 @@ public class SettingsFragment extends Fragment {
     private void initButtonOnClick(final View fragmentView) {
         btnSave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //etToSave.setText("dddvsv");
-                selectedId = radioSexGroup.getCheckedRadioButtonId();
+            selectedId = radioGridGroup.getCheckedRadioButtonId();
+            radioGridButton = (RadioButton) fragmentView.findViewById(selectedId);
 
-                // find the radiobutton by returned id
-                radioSexButton = (RadioButton) fragmentView.findViewById(selectedId);
-
-                saveData();
-                showToast("Data saved");
+            saveData();
+            showToast("Data saved");
             }
         });
     }
@@ -72,22 +67,30 @@ public class SettingsFragment extends Fragment {
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         String editTextData = etToSave.getText().toString();
         preferencesEditor.putString(PREFERENCES_TEXT_FIELD, editTextData);
-        preferencesEditor.putInt(GENDER_FIELD, selectedId);
+        switch (selectedId){
+            case R.id.radioMale:
+                preferencesEditor.putInt(GRID_FIELD, 0);
+                break;
+            case R.id.radioFemale:
+                preferencesEditor.putInt(GRID_FIELD, 1);
+                break;
+        }
+
         preferencesEditor.apply();
     }
 
     private void restoreData(final View fragmentView) {
-        String textFromPreferences = preferences.getString(PREFERENCES_TEXT_FIELD, "");
+        String textFromPreferences = preferences.getString(PREFERENCES_TEXT_FIELD, "3");
         etToSave.setText(textFromPreferences);
-        int intGender = preferences.getInt(GENDER_FIELD, 0);
-       if (intGender == 0)
+        int intGrid = preferences.getInt(GRID_FIELD, 0);
+       if (intGrid == 0)
         {
-            radioSexButton = (RadioButton) fragmentView.findViewById(R.id.radioMale);
-            radioSexButton.setChecked(true);
+            radioGridButton = (RadioButton) fragmentView.findViewById(R.id.radioMale);
+            radioGridButton.setChecked(true);
         }
         else {
-           radioSexButton = (RadioButton) fragmentView.findViewById(intGender);
-           radioSexButton.setChecked(true);
+           radioGridButton = (RadioButton) fragmentView.findViewById(intGrid);
+           radioGridButton.setChecked(true);
         }
 
 
@@ -106,7 +109,7 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         etToSave = (EditText) MyFragmentView.findViewById(R.id.etToSave);
         btnSave = (Button) MyFragmentView.findViewById(R.id.btnSave);
-        radioSexGroup = (RadioGroup) MyFragmentView.findViewById(R.id.radioSex);
+        radioGridGroup = (RadioGroup) MyFragmentView.findViewById(R.id.radioSex);
 
         initButtonOnClick(MyFragmentView);
         restoreData(MyFragmentView);
