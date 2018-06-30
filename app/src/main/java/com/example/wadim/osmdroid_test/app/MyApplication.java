@@ -24,6 +24,9 @@ import org.osmdroid.util.GeoPoint;
 import java.net.URL;
 import java.util.List;
 
+import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_NAME;
+import static com.example.wadim.osmdroid_test.fragment.SettingsFragment.PREFERENCES_RADIUS;
+
 public class MyApplication extends Application {
 
     public static final String TAG = MyApplication.class
@@ -95,6 +98,8 @@ public class MyApplication extends Application {
     }
 
     public String getUrl() {
-        return "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/" + Double.toString(lat) + "/" + Double.toString(lon);
+        SharedPreferences preferences = this.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        Integer radius = preferences.getInt(PREFERENCES_RADIUS, 20);
+        return "http://ec2-18-197-4-23.eu-central-1.compute.amazonaws.com/api/routes/" + Double.toString(lat) + "/" + Double.toString(lon) + "/" + radius;
     }
 }
